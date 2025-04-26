@@ -8,6 +8,15 @@ def is_unique(string):
     Returns:
         True if all characters are unique, False otherwise
     """
+    letters = []
+
+    for char in string:
+        if char not in letters and char.isalpha():
+            letters.append(char)
+
+        else:
+            return False
+
     return True
 
 
