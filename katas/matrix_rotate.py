@@ -5,6 +5,20 @@ def rotate_matrix(matrix):
     Args:
         matrix: the 2D square matrix to rotate
     """
+    # rotate the matrix 90 degree clockwise: first row - last col ...
+
+    if matrix is None:
+        return
+
+    n = len(matrix)
+    for row in range(len(matrix)):
+        for col in range(row + 1, len(matrix[0])):
+            # swapping values at the same time
+            matrix[row][col], matrix[col][row] = matrix[col][row], matrix[row][col]
+
+    for row in matrix:
+        row.reverse()
+
     pass
 
 
