@@ -1,3 +1,4 @@
+import re
 from typing import Dict
 
 
@@ -31,7 +32,18 @@ def parse_log(log: str) -> Dict[str, str]:
     Raises:
         ValueError: if the log format is invalid
     """
-    return {}
+    pattern = re.compile(
+        r'(?P<client_ip>\S+) - - '
+        r'\[(?P<date>[^\]]+)\] '
+        r'"(?P<http_method>\S+) (?P<path>\S+) HTTP/(?P<http_version>\S+)"'
+        r' (?P<status>\d{3}) (?P<response_bytes>\d+) '
+        r'"[^"]*" "(?P<user_agent>[^"]+)"'
+    )
+
+    match = pattern.match(log)
+    if not match:
+        raise ValueError('Invalid log format')
+    return match.groupdict()
 
 
 if __name__ == "__main__":

@@ -1,6 +1,19 @@
 import json
+import os
 from typing import Any
 
+def recursive_merge(d1: dict[str, Any], d2: dict[str, Any]) -> dict[str, Any]:
+    """
+    Recursively merge two dictionaries, where values in d2 override those in d1.
+    Nested dictionaries are merged recursively.
+    """
+    result = d1.copy()
+    for key, value in d2.items():
+        if key in result and isinstance(result[key], dict) and isinstance(value, dict):
+            result[key] = recursive_merge(result[key], value)
+        else:
+            result[key] = value
+    return result
 
 def json_configs_merge(*json_paths: str) -> dict[str, Any]:
     """
@@ -57,7 +70,18 @@ def json_configs_merge(*json_paths: str) -> dict[str, Any]:
     Returns:
         dict: The merged configuration dictionary.
     """
-    return None
+    merged_config: dict[str, Any] = {}
+
+    for path in json_paths:
+        if not os.path.isfile(path):
+            print(f"Warning: File not found, skipping: {path}")
+            continue
+
+        with open(path, 'r', encoding='utf-8') as f:
+            config = json.load(f)
+            merged_config = recursive_merge(merged_config, config)
+
+    return merged_config
 
 
 

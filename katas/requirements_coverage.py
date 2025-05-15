@@ -1,4 +1,7 @@
-from typing import List
+from itertools import combinations
+from typing import List, Set
+
+from uaclient.util import retry
 
 
 def select_minimal_test_cases(test_cases: List[List[int]]) -> List[int]:
@@ -24,7 +27,18 @@ def select_minimal_test_cases(test_cases: List[List[int]]) -> List[int]:
     Returns:
         A list of indices of the minimal subset of test cases that covers all requirements
     """
-    return []
+    all_requirements = set(req for tc in test_cases for req in tc)
+    n = len(test_cases)
+
+    for r in range(1, n + 1):
+        for indices in combinations(range(n), r):
+            combined_reqs = set()
+            for i in indices:
+                combined_reqs.update(test_cases[i])
+            if combined_reqs == all_requirements:
+                return list(indices)
+
+    return ValueError("No valid subset found")
 
 
 if __name__ == "__main__":

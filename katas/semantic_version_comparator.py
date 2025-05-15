@@ -18,6 +18,19 @@ def compare_versions(version1, version2):
          0 if version1 = version2
          1 if version1 > version2
     """
+    v1 = [int(x) for x in version1.split('.')]
+    v2 = [int(x) for x in version2.split('.')]
+
+    # padding with zeros (short v)
+    length = max(len(v1), len(v2))
+    v1 += [0] * (length - len(v1))
+    v2 += [0] * (length - len(v2))
+
+    for a, b in zip(v1, v2):
+        if a > b:
+            return 1
+        elif a < b:
+            return -1
     return 0
 
 

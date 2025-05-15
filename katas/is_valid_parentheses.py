@@ -12,8 +12,20 @@ def is_valid_parentheses(s):
     Returns:
         True if the string has valid parentheses, False otherwise
     """
-    # Hint for efficient implementation: stack
-    return False
+    # Hint for efficient implementation: stack => LIFO
+    stack = []
+    for char in s:
+        if char in ('(', '{', '['):
+            stack.append(char)
+        else:
+            if stack and ((stack[-1] == '(' and char == ')')
+                or (stack[-1] == '[' and char == ']')
+                or (stack[-1] == '{' and char == '}')):
+                stack.pop()
+            else:
+                return False
+
+    return not stack
 
 
 if __name__ == '__main__':
